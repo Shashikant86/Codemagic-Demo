@@ -1,8 +1,10 @@
-# flutter_demo
+# Flutter Continuous Integration Demo 
 
-A new Flutter project.
+This is a demo flutter project which has CI/CD setup. 
 
-## Getting Started
+## Usage
 
 For help getting started with Flutter, view our online
 [documentation](https://flutter.io/).
+
+This repository is to demonstrate how to CI/CD for the flutter apps. 
