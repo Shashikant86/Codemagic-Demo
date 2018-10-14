@@ -24,8 +24,7 @@ void main() {
 
       SerializableFinder message = find.text("You have pushed the button this many times:");
       
-      await driver.waitFor(message);    
-        
+      await driver.waitFor(message);           
     });
   });
 }
