@@ -1,0 +1,8 @@
+platform :ios do
+  lane :build_flutter_ios do
+      xcodebuild(
+          scheme: "Runner",
+          workspace: "Runner.xcworkspace"
+        )
+    end 
+end
