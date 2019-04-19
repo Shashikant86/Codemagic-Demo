@@ -1,65 +1,70 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(new MyApp());
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return new MaterialApp(
-      title: 'Flutter Demo',
-      theme: new ThemeData(
-             primarySwatch: Colors.blue,
-      ),
-      home: new MyHomePage(title: 'My Flutter App'),
-    );
-  }
+void main() {
+  // Set `enableInDevMode` to true to see reports while in debug mode
+  // This is only to be used for confirming that reports are being
+  // submitted as expected. It is not intended to be used for everyday
+  // development.
+  Crashlytics.instance.enableInDevMode = true;
+
+  // Pass all uncaught errors to Crashlytics.
+  FlutterError.onError = (FlutterErrorDetails details) {
+    Crashlytics.instance.onError(details);
+  };
+  runApp(MyApp());
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
+class MyApp extends StatefulWidget {
   @override
-  _MyHomePageState createState() => new _MyHomePageState();
+  _MyAppState createState() => _MyAppState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(widget.title),
-      ),
-      body: new Center(
-           child: new Column(
-          
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Text(
-              'You have pushed the button this many times:',
-            ),
-            new Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Crashlytics example app'),
+        ),
+        body: Center(
+          child: Column(
+            children: <Widget>[
+              FlatButton(
+                  child: const Text('Key'),
+                  onPressed: () {
+                    Crashlytics.instance.setString('foo', 'bar');
+                  }),
+              FlatButton(
+                  child: const Text('Log'),
+                  onPressed: () {
+                    Crashlytics.instance.log('baz');
+                  }),
+              FlatButton(
+                  child: const Text('Crash'),
+                  onPressed: () {
+                    // Use Crashlytics to throw an error. Use this for
+                    // confirmation that errors are being correctly reported.
+                    Crashlytics.instance.crash();
+                  }),
+              FlatButton(
+                  child: const Text('Throw Error'),
+                  onPressed: () {
+                    // Example of thrown error, it will be caught and sent to
+                    // Crashlytics.
+                    throw StateError('Uncaught error thrown by app.');
+                  }),
+            ],
+          ),
         ),
       ),
-      floatingActionButton: new FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: new Icon(Icons.add),
-      ), 
     );
   }
 }
